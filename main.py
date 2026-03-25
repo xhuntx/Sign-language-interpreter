@@ -1,14 +1,15 @@
 import cv2
 import numpy as np
 import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 from tensorflow import keras
 import pyttsx3 as tts
 import time
 
-# --- MODEL SETUP ---
 
 MODEL_PATH = "sign_numbers_classifier.h5"
-HAND_LANDMARKER_MODEL_PATH = "hand_landmarker.task"  # put this file in your project folder
+HAND_LANDMARKER_MODEL_PATH = "hand_landmarker.task"  
 
 model = keras.models.load_model(MODEL_PATH)
 
@@ -24,12 +25,6 @@ CLASS_LABELS = [
     "P", "Q", "R", "S", "T",
     "U", "V", "W", "X", "Y", "Z",
 ]
-
-# --- MEDIAPIPE TASKS SETUP ---
-
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
-
 
 def create_hand_landmarker():
     """
