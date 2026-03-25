@@ -13,6 +13,7 @@ HAND_LANDMARKER_MODEL_PATH = "hand_landmarker.task"
 
 model = keras.models.load_model(MODEL_PATH)
 
+
 engine = tts.init()
 engine.setProperty("rate", 150)
 
@@ -25,6 +26,8 @@ CLASS_LABELS = [
     "P", "Q", "R", "S", "T",
     "U", "V", "W", "X", "Y", "Z",
 ]
+print("Model output shape:", model.output_shape)
+print("Number of labels:", len(CLASS_LABELS))
 
 def create_hand_landmarker():
     """
@@ -38,7 +41,7 @@ def create_hand_landmarker():
     options = HandLandmarkerOptions(
         base_options=BaseOptions(model_asset_path=HAND_LANDMARKER_MODEL_PATH),
         running_mode=RunningMode.VIDEO,
-        num_hands=1,
+        num_hands=2,
     )
 
     return vision.HandLandmarker.create_from_options(options)
@@ -116,7 +119,13 @@ def main():
                 input_batch = features[np.newaxis, :]
                 preds = model.predict(input_batch, verbose=0)
                 class_idx = int(np.argmax(preds, axis=1)[0])
-
+                
+                # # --------------- Debug -----------------------
+                # probs = preds[0]
+                # top_indices = probs.argsort()[-5:][::-1]
+                # print("top-5:", [(i, CLASS_LABELS[i], float(probs[i])) for i in top_indices])
+                # print("argmax:", class_idx, CLASS_LABELS[class_idx])
+                
                 if 0 <= class_idx < len(CLASS_LABELS):
                     predicted_label = CLASS_LABELS[class_idx]
                     prediction_text = f"Predicted: {predicted_label}"
@@ -160,8 +169,7 @@ def main():
                 prediction_text,
                 (10, 40),
                 cv2.FONT_HERSHEY_SIMPLEX,
-                1.0,
-                (0, 0, 0),
+                1.0,                (0, 0, 0),
                 2,
                 cv2.LINE_AA,
             )
