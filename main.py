@@ -41,7 +41,7 @@ def create_hand_landmarker():
     options = HandLandmarkerOptions(
         base_options=BaseOptions(model_asset_path=HAND_LANDMARKER_MODEL_PATH),
         running_mode=RunningMode.VIDEO,
-        num_hands=2,
+        num_hands=1,
     )
 
     return vision.HandLandmarker.create_from_options(options)
@@ -76,6 +76,7 @@ def extract_hand_landmarks(image_bgr, hand_landmarker, frame_timestamp_ms):
         coords.extend([lm.x, lm.y, lm.z])
 
     return np.array(coords, dtype=np.float32), result
+
 
 
 def main():
