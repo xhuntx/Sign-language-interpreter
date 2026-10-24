@@ -8,7 +8,7 @@ import pyttsx3 as tts
 import time
 
 
-MODEL_PATH = "sign_numbers_classifier.h5"
+MODEL_PATH = "sign_language_classifier.h5"
 HAND_LANDMARKER_MODEL_PATH = "hand_landmarker.task"  
 
 model = keras.models.load_model(MODEL_PATH)
