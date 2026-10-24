@@ -1,3 +1,6 @@
+import os
+import sys
+import time
 import cv2
 import numpy as np
 import mediapipe as mp
@@ -7,9 +10,16 @@ from tensorflow import keras
 import pyttsx3 as tts
 import time
 
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller."""
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
 
-MODEL_PATH = "sign_language_classifier.h5"
-HAND_LANDMARKER_MODEL_PATH = "hand_landmarker.task"  
+
+# Wrap your models so they point to the dynamic unpacking directory at runtime
+MODEL_PATH = resource_path("sign_language_classifier.h5")
+HAND_LANDMARKER_MODEL_PATH = resource_path("hand_landmarker.task")
 
 model = keras.models.load_model(MODEL_PATH)
 
@@ -41,7 +51,7 @@ def create_hand_landmarker():
     options = HandLandmarkerOptions(
         base_options=BaseOptions(model_asset_path=HAND_LANDMARKER_MODEL_PATH),
         running_mode=RunningMode.VIDEO,
-        num_hands=1,
+        num_hands=2,
     )
 
     return vision.HandLandmarker.create_from_options(options)
@@ -49,33 +59,35 @@ def create_hand_landmarker():
 
 def extract_hand_landmarks(image_bgr, hand_landmarker, frame_timestamp_ms):
     """
-    Run MediaPipe HandLandmarker on a BGR frame and return:
-
-      - a 63-element feature vector: [x0, y0, z0, ..., x20, y20, z20]
-      - the full result object (for drawing)
-
-    x and y are normalized in [0, 1], z is relative depth.
+    Run MediaPipe HandLandmarker and return a 126-element feature vector.
+    Fills missing hand data with zeros if fewer than 2 hands are detected.
     """
-    # Convert BGR (OpenCV) -> RGB
     image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-
-    # Wrap into a MediaPipe Image
     mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=image_rgb)
-
-    # Run the detector in VIDEO mode (needs timestamp)
     result = hand_landmarker.detect_for_video(mp_image, frame_timestamp_ms)
+
+    # Initialize a clean array of 126 zeros (2 hands * 21 landmarks * 3 coords)
+    coords = np.zeros(126, dtype=np.float32)
 
     if not result.hand_landmarks:
         return None, result
 
-    # First detected hand only
-    hand_landmarks = result.hand_landmarks[0]
+    # Loop through detected hands (up to 2)
+    for hand_idx, hand_landmarks in enumerate(result.hand_landmarks):
+        if hand_idx >= 2: 
+            break  # Ignore a 3rd hand if it somehow appears
+            
+        # Calculate where this hand's data starts in our 126-element array
+        # Hand 0 starts at index 0, Hand 1 starts at index 63
+        start_offset = hand_idx * 63
+        
+        for lm_idx, lm in enumerate(hand_landmarks):
+            base_pos = start_offset + (lm_idx * 3)
+            coords[base_pos] = lm.x
+            coords[base_pos + 1] = lm.y
+            coords[base_pos + 2] = lm.z
 
-    coords = []
-    for lm in hand_landmarks:
-        coords.extend([lm.x, lm.y, lm.z])
-
-    return np.array(coords, dtype=np.float32), result
+    return coords, result
 
 
 
