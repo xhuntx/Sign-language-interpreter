@@ -7,7 +7,7 @@ pip install -r requirements.txt
 ```
 ## To run (Mac silicon only)
 1. Download the zip from the most recent release [Most recent release](https://github.com/xhuntx/Sign-language-interpreter/releases/tag/Beta-1.0.0)
-2. Run the first time to give permission to use camera then again to use the softwawre.
+2. Run the first time to give permission to use camera then again to use the software.
 
 ### To edit the current model or to contribute to the models improvement go to:
 [Sign-Language-Interpreter-Model-Creator](https://github.com/xhuntx/Sign-Language-Interpreter-Model-Creator)
