@@ -10,28 +10,40 @@ A real-time sign language interpreter that uses your webcam to recognize hand si
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
-- [Demo](#-demo)
-- [Features](#-features)
-- [Supported Signs](#-supported-signs)
-- [How It Works](#-how-it-works)
-- [Quick Start (Prebuilt App)](#-quick-start-prebuilt-app--apple-silicon)
-- [Running From Source](#-running-from-source)
-- [Usage](#-usage)
-- [Configuration](#%EF%B8%8F-configuration)
-- [Project Structure](#-project-structure)
-- [Training / Improving the Model](#-training--improving-the-model)
-- [Troubleshooting](#-troubleshooting)
-- [Roadmap](#%EF%B8%8F-roadmap)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Demo](#demo)
+- [Roadmap](#roadmap)
+- [Features](#features)
+- [Supported Signs](#supported-signs)
+- [How It Works](#how-it-works)
+- [Quick Start (Prebuilt App)](#quick-start-prebuilt-app--apple-silicon)
+- [Running From Source](#running-from-source)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [Project Structure](#project-structure)
+- [Training / Improving the Model](#training--improving-the-model)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
 ## Demo
 
 Watch the demo video: **[Demo Video](https://drive.google.com/file/d/1n4d6U1cYlNv9xmkWu9R4qf6L688t3eqC/view?usp=sharing)**
+
+---
+
+## Roadmap
+
+- [x] ASL fingerspelling (A–Z)
+- [x] Numbers 0–10
+- [x] Text-to-speech output
+- [ ] Full-word / dynamic (moving) signs
+- [ ] Builds for Intel Mac, Windows, and Linux
+- [ ] Sentence building / on-screen transcript
+- [ ] Learning mode for practicing signs
 
 ---
 
@@ -86,17 +98,17 @@ The easiest way to try it on an **Apple Silicon Mac (M1/M2/M3/…)**:
 2. Unzip it and open the app.
 3. **The first launch asks for camera permission.** Grant it, then **open the app again** to start interpreting.
 
-> 💡 If macOS blocks the app because it's from an unidentified developer, right-click the app → **Open**, or go to **System Settings → Privacy & Security** and choose **Open Anyway**.
+> **Tip:** If macOS blocks the app because it's from an unidentified developer, right-click the app → **Open**, or go to **System Settings → Privacy & Security** and choose **Open Anyway**.
 
 ---
 
-## 🛠 Running From Source
+## Running From Source
 
 Works on any OS that supports the dependencies below (macOS, Windows, Linux).
 
 ### Prerequisites
 
-- **Python 3.11** (needed for compatibility with `mediapipe 0.10.9` and `tensorflow 2.16.1`)
+- **Python 3.11**
 - A webcam
 - Speakers/headphones (for speech output)
 - **Linux only:** `pyttsx3` needs `espeak` (`sudo apt install espeak`)
@@ -153,7 +165,7 @@ When it starts, it prints the loaded labels and the model's input/output shapes 
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 You can change these constants in `main.py`:
 
@@ -166,11 +178,11 @@ You can change these constants in `main.py`:
 | `COOLDOWN_SECONDS` | `1.0` | Minimum time between spoken words. |
 | `engine.setProperty("rate", ...)` | `150` | Speech speed (words per minute). |
 
-> ⚠️ `FLIP_BEFORE_DETECTION` and `HAND_SLOTS` **must match how the training data was collected**, or accuracy will drop sharply.
+> **Warning:** `FLIP_BEFORE_DETECTION` and `HAND_SLOTS` **must match how the training data was collected**, or accuracy will drop sharply.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Sign-language-interpreter/
@@ -214,24 +226,12 @@ To use a model you trained:
 | App closes on first launch | Expected. The first run requests camera permission. Open it again. |
 | Always shows "No hand detected" | Improve lighting and keep your whole hand in the frame. |
 | Predictions are wrong or jumpy | Hold signs steadier, or set `DEBUG_TOP5 = True` to see what the model is considering. |
-| `protobuf` / MediaPipe errors | Use the pinned `protobuf==3.20.3` and a supported Python version (3.9–3.11). |
+| `protobuf` / MediaPipe errors | Use the pinned `protobuf==3.20.3` and Python 3.11. |
 | No speech on Linux | Install `espeak`. |
 
 ---
 
-## Roadmap
-
-- [x] ASL fingerspelling (A–Z)
-- [x] Numbers 0–10
-- [x] Text-to-speech output
-- [ ] Full-word / dynamic (moving) signs
-- [ ] Builds for Intel Mac, Windows, and Linux
-- [ ] Sentence building / on-screen transcript
-- [ ] Learning mode for practicing signs
-
----
-
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome!
 
@@ -251,4 +251,4 @@ This project is licensed under the **MIT License**. See [LICENSE](LICENSE) for d
 
 ---
 
-<p align="center">Made with ❤️ by <a href="https://github.com/xhuntx">xhuntx</a></p>
+<p align="center">Made by <a href="https://github.com/xhuntx">xhuntx</a></p>
