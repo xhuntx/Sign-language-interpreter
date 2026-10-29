@@ -41,10 +41,10 @@ Watch the demo video: **[Demo Video](https://drive.google.com/file/d/1n4d6U1cYlN
 - [x] Numbers 0–10
 - [x] Text-to-speech output
 - [ ] Full-word / dynamic (moving) signs
-- [ ] Builds for Intel Mac, Windows, and Linux
 - [ ] Sentence building / on-screen transcript
 - [ ] Learning mode for practicing signs
-
+- [ ] Builds for Intel Mac, Windows, and Linux
+- [ ] Mobile build 
 ---
 
 ## Features
